@@ -13,11 +13,11 @@ import jp.co.mochisapo.common.DbUtil;
 
 /**
  * ログインIDとパスワードに一致するユーザを1件取得します。
- *
  * @param accountDto ログインID/パスワードを保持するDTO(パスワードはハッシュを想定）
  * @return 見つかった場合は Student、無い場合は Optional.empty()
  * @throws SQLException    SQL実行時の例外
  * @throws NamingException DataSource解決失敗
+ * @author Shota.Uchiyama
  */
 
 public class AccountRepository {
