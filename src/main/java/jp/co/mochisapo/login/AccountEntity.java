@@ -1,6 +1,7 @@
 package jp.co.mochisapo.login;
 
 import java.time.LocalDate;
+import java.util.StringJoiner;
 
 /**
  * アカウント情報を表すエンティティクラス
@@ -8,12 +9,15 @@ import java.time.LocalDate;
  *
  */
 public class AccountEntity {
+	
+	public enum Role { STUDENT, STAFF, ADMIN }
+	
+	/** role */
+	private Role role;
 	/** id */
 	private int id;
 	/** ログインに使用するID */
 	private String loginId;
-	/** パスワード */
-	private String password;
 	/** クラス（組織や学級など）を表すコード値 */
 	private String classCode;
 	/** 氏名 */
@@ -23,6 +27,20 @@ public class AccountEntity {
 	/** 生年月日 */
 	private LocalDate birthday;
 	
+	/**
+	 * Roleを取得
+	 * @return role
+	 */
+	public Role getRole() {
+		return role;
+	}
+	/**
+	 * Roleを設定
+	 * @return role 設定するrole
+	 */
+	public void setRole(Role role) {
+		this.role = role;
+	}
 	/** 
 	 * IDを取得
 	 * @return ID
@@ -50,20 +68,6 @@ public class AccountEntity {
 	 */
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
-	}
-	/**
-	 * パスワードを取得
-	 * @return パスワード
-	 */
-	public String getPassword() {
-		return password;
-	}
-	/**
-	 * パスワードを設定
-	 * @param password 設定するパスワード
-	 */
-	public void setPassword(String password) {
-		this.password = password;
 	}
 	/**
 	 * クラスコードを取得
@@ -123,12 +127,15 @@ public class AccountEntity {
 	}
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(this.getClass().getName()).append("{")
-				.append("id=").append(getId())
-				.append(".loginId=").append(getLoginId())
-				.append(".name=").append(getName())
-				.append("}");
-		return sb.toString();
+		// 機微情報は含めない。loginIdは一部マスク
+		String maskedLogin = loginId == null ? null :
+			(loginId.length() <= 3 ? "***" : loginId.substring(0, 3) + "***");
+		
+		return new StringJoiner(", ", getClass().getName() + "{", "}")
+				.add("id=" + id)
+				.add("loginId=" + maskedLogin)
+				.add("name=" + name)
+				.add("role=" + role)
+				.toString();
 	}
 }
