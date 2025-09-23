@@ -58,4 +58,37 @@
     ・キャリアコンサルタントの空いている日時より、面談の予約を行う。  
     ・面談予約が確定している場合は、予定している日時を表示する。  
   8.4. 面談キャンセル  
-    ・生徒からキャンセルの申し出がある場合は、面談一覧画面に表示されているチェックボタンを選択し予約の取り消しを行う。  
+    ・生徒からキャンセルの申し出がある場合は、面談一覧画面に表示されているチェックボタンを選択し予約の取り消しを行う。
+
+【データベース初期設定】
+PostgreSQL推奨。
+
+1.以下のSQLを実行してください。 CREATE DATABASE motibe_support;
+
+2.データベースに接続し、以下のSQLを実行してください。 
+CREATE TABLE student(id CHAR(4) NOT NULL ,password TEXT NOT NULL ,class VARCHAR(5) NOT NULL ,student_name VARCHAR(20) NOT NULL ,birthday DATE
+ ,gender VARCHAR(2) ,telephone_number VARCHAR(11) ,mail_address VARCHAR(50) ,day_of_leaving DATE NOT NULL ,primary key(id) );
+
+CREATE TABLE lending_library(id SERIAL
+ ,book_name VARCHAR(30) NOT NULL ,reading_name VARCHAR(20) ,rental_date DATE ,return_date DATE ,days_in_arrears INTEGER ,primary key(id) );
+
+CREATE TABLE photo_of_book(id SERIAL ,file_key CHAR(32) NOT NULL ,file_path VARCHAR(100) ,content_type VARCHAR(50) ,primary key(id)
+ );
+
+CREATE TABLE schedule(teacher_name VARCHAR(20) NOT NULL ,date DATE NOT NULL ,start_time VARCHAR(5) NOT NULL ,end_time VARCHAR(5) NOT NULL ,mark VARCHAR(2) NOT NULL );
+
+CREATE TABLE url_link(introduction_name VARCHAR(50) NOT NULL ,link VARCHAR(65535) NOT NULL ,file_key CHAR(32)
+ ,file_path VARCHAR(100) ,content_type VARCHAR(50) ,primary key(introduction_name, link) );
+
+CREATE TABLE teacher(id CHAR(6) NOT NULL ,password TEXT NOT NULL ,class VARCHAR(5) NOT NULL ,teacher_name VARCHAR(20) NOT NULL ,job_category VARCHAR(20) NOT NULL ,birthday DATE
+ ,gender VARCHAR(2) ,telephone_number VARCHAR(11) ,mail_address VARCHAR(50) ,primary key(id) );
+
+CREATE TABLE administrator(id CHAR(8) NOT NULL ,login_id VARCHAR(20) NOT NULL ,password TEXT NOT NULL ,name VARCHAR(20) NOT NULL ,primary key(id) );
+
+CREATE TABLE question(student_name VARCHAR(20) NOT NULL ,content VARCHAR(100) NOT NULL );
+
+CREATE TABLE news(teacher_name VARCHAR(20) NOT NULL ,announcement VARCHAR(100) NOT NULL ,date DATE NOT NULL );
+
+CREATE TABLE interview_reservation(teacher_name VARCHAR(20) NOT NULL ,student_name VARCHAR(20) NOT NULL ,date DATE NOT NULL ,start_time VARCHAR(5) NOT NULL ,end_time VARCHAR(5) NOT NULL );
+
+3.以下のSQLで、ログインIDとパスワード、名前を設定して実行してください。 INSERT INTO administrator (login_id, password, name) VALUES ('ログインID','パスワード', '名前' );

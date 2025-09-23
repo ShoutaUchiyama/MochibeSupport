@@ -41,10 +41,6 @@ public class LoginServlet extends HttpServlet {
                 toLoginPage(request, response, "ログインIDまたはパスワードを入力してください。");
                 return;
             }
-            if (password.length > 20) {
-                toLoginPage(request, response, "パスワードは20文字以内で入力してください。");
-                return;
-            }
 
             Optional<AccountEntity> auth = accountService.authenticateAutoDetect(loginId, password);
             if (auth.isEmpty()) {
