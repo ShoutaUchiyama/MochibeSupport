@@ -1,0 +1,29 @@
+body {
+  background-color: #fafafa;
+  font-family: sans-serif;
+}
+.setup-container {
+  width: 300px;
+  margin: 100px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #ccc;
+}
+label, input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+button {
+  width: 100%;
+  padding: 8px;
+  background: #007bff;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background: #0056b3;
+}

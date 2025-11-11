@@ -66,7 +66,7 @@ PostgreSQL推奨。
 1.以下のSQLを実行してください。 CREATE DATABASE motibe_support;
 
 2.データベースに接続し、以下のSQLを実行してください。 
-CREATE TABLE student(id CHAR(4) NOT NULL ,password TEXT NOT NULL ,class VARCHAR(5) NOT NULL ,student_name VARCHAR(20) NOT NULL ,birthday DATE
+CREATE TABLE student(id SERIAL ,login_id CHAR(4) ,password TEXT NOT NULL ,class VARCHAR(5) NOT NULL ,name VARCHAR(20) NOT NULL ,birthday DATE
  ,gender VARCHAR(2) ,telephone_number VARCHAR(11) ,mail_address VARCHAR(50) ,day_of_leaving DATE NOT NULL ,primary key(id) );
 
 CREATE TABLE lending_library(id SERIAL
@@ -80,10 +80,10 @@ CREATE TABLE schedule(teacher_name VARCHAR(20) NOT NULL ,date DATE NOT NULL ,sta
 CREATE TABLE url_link(introduction_name VARCHAR(50) NOT NULL ,link VARCHAR(65535) NOT NULL ,file_key CHAR(32)
  ,file_path VARCHAR(100) ,content_type VARCHAR(50) ,primary key(introduction_name, link) );
 
-CREATE TABLE teacher(id CHAR(6) NOT NULL ,password TEXT NOT NULL ,class VARCHAR(5) NOT NULL ,teacher_name VARCHAR(20) NOT NULL ,job_category VARCHAR(20) NOT NULL ,birthday DATE
+CREATE TABLE staff(id SERIAL ,login_id CHAR(6) NOT NULL ,password TEXT NOT NULL ,class VARCHAR(5) NOT NULL ,name VARCHAR(20) NOT NULL ,job_category VARCHAR(20) NOT NULL ,birthday DATE
  ,gender VARCHAR(2) ,telephone_number VARCHAR(11) ,mail_address VARCHAR(50) ,primary key(id) );
 
-CREATE TABLE administrator(id CHAR(8) NOT NULL ,login_id VARCHAR(20) NOT NULL ,password TEXT NOT NULL ,name VARCHAR(20) NOT NULL ,primary key(id) );
+CREATE TABLE administrator(id SERIAL, login_id CHAR(8) NOT NULL ,login_id VARCHAR(20) NOT NULL ,password TEXT NOT NULL ,name VARCHAR(20) NOT NULL ,primary key(id) );
 
 CREATE TABLE question(student_name VARCHAR(20) NOT NULL ,content VARCHAR(100) NOT NULL );
 

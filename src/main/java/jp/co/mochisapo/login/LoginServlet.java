@@ -47,7 +47,6 @@ public class LoginServlet extends HttpServlet {
                 toLoginPage(request, response, "UserID、または、Passwordが違います。");
                 return;
             }
-
             AccountEntity e = auth.get();
 
             // セッション固定化対策

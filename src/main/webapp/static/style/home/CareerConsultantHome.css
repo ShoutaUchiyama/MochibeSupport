@@ -1,0 +1,7 @@
+/* CareerConsultantHome.css */
+body.role--consultant .ms-welcome{
+  background:linear-gradient(180deg, color-mix(in lab, var(--brand) 9%, var(--surface)), var(--surface));
+}
+.role--consultant .badge--tip{
+  background: color-mix(in lab, #10b981 22%, var(--surface));
+}
