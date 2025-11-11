@@ -1,0 +1,7 @@
+/* TeacherHome.css */
+body.role--teacher .ms-welcome{
+  background:linear-gradient(180deg, color-mix(in lab, var(--brand) 9%, var(--surface)), var(--surface));
+}
+.role--teacher .badge--info{
+  background: color-mix(in lab, #06b6d4 20%, var(--surface));
+}

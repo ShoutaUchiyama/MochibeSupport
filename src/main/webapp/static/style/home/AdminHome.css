@@ -1,0 +1,7 @@
+/* AdminHome.css */
+body.role--admin .ms-welcome{
+  background:linear-gradient(180deg, color-mix(in lab, var(--brand) 10%, var(--surface)), var(--surface));
+}
+.role--admin .badge--danger{
+  background: color-mix(in lab, #ef4444 20%, var(--surface));
+}

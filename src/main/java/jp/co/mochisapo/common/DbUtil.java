@@ -12,7 +12,6 @@ import javax.sql.DataSource;
  * DB接続取得に関するユーティリティ。
  * <p>
  * JNDI から DataSource を解決し、必要なときに Connection を取得します。
- * 呼び出し側は try-with-resources を用いて自動クローズしてください。
  * 例：
  * <pre>
  * try (Connection conn = DbUtil.getConnection()) {

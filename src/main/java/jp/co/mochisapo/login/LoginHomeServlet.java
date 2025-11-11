@@ -21,6 +21,15 @@ public class LoginHomeServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
+		String msg = (String) request.getSession().getAttribute("setupMessage");
+		if (msg != null) {
+		    request.setAttribute("message", msg);
+		    request.getSession().removeAttribute("setupMessage");
+		}
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/login/Login.jsp");
+		dispatcher.forward(request, response);
+		
 		doPost(request, response);
 	}
 }

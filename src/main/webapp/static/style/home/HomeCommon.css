@@ -1,0 +1,206 @@
+/* ==========================================================================
+   HomeCommon.css
+   役割別ホーム（Admin / Teacher / CareerConsultant / Student）共通スタイル
+   ========================================================================== */
+
+/* ---------- ベーストークン（デフォルト=Student相当） ---------- */
+:root{
+  --brand:#FF7A1A;
+  --brand-2:#FFB14A;
+  --accent:#22c55e;
+  --bg:#fef9f4;
+  --surface:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:rgba(15,23,42,0.08);
+  --ring:rgba(255,122,26,0.25);
+  --shadow:0 8px 24px rgba(2,6,23,0.08);
+  --radius:16px;
+  --radius-sm:12px;
+  --radius-lg:20px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b0f16;
+    --surface:#0f172a;
+    --text:#e5e7eb;
+    --muted:#93a4be;
+    --border:rgba(226,232,240,0.08);
+    --ring:rgba(255,177,74,0.28);
+    --shadow:0 10px 28px rgba(0,0,0,0.35);
+  }
+}
+
+/* ---------- 役割別テーマ（body にクラス付与で色替え） ---------- */
+body.role--admin{
+  --brand:#3b82f6;     /* 青: Admin */
+  --brand-2:#7cb2ff;
+  --accent:#22c55e;
+}
+body.role--teacher{
+  --brand:#8b5cf6;     /* 紫: Teacher */
+  --brand-2:#b79bff;
+  --accent:#10b981;
+}
+body.role--consultant{
+  --brand:#f43f5e;     /* 赤: Career Consultant */
+  --brand-2:#ff8aa0;
+  --accent:#06b6d4;
+}
+body.role--student{
+  /* Student は :root のデフォルトを使用 */
+}
+
+/* ---------- ベースレイアウト ---------- */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+               "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(90,159,255,0.18), transparent 60%),
+    radial-gradient(1000px 500px at 10% -10%, rgba(97,235,197,0.14), transparent 60%),
+    var(--bg);
+  line-height:1.6;
+}
+
+/* ヘッダー */
+header, .ms-header{
+  position:sticky; top:0; z-index:20;
+  backdrop-filter: saturate(140%) blur(6px);
+  background: color-mix(in lab, var(--surface) 80%, transparent);
+  border-bottom:1px solid var(--border);
+}
+.ms-header__inner{
+  max-width:1100px; margin:0 auto; padding:12px 20px;
+  display:flex; align-items:center; gap:16px; justify-content:space-between;
+}
+.ms-header__left,
+.ms-header__right{display:flex; align-items:center; gap:10px}
+.ms-logo{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.02em; color:var(--text); text-decoration:none}
+.ms-logo img{height:28px; width:auto}
+.ms-nav a{
+  color:var(--muted); text-decoration:none; padding:8px 12px; border-radius:10px;
+  transition: all .2s ease;
+}
+.ms-nav a:hover{ color:var(--text); background: color-mix(in lab, var(--brand) 10%, transparent) }
+
+/* コンテナ */
+.ms-container{ max-width:1100px; margin:28px auto 80px; padding:0 20px }
+
+/* ウェルカム帯 */
+.ms-welcome{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  background:linear-gradient(180deg, color-mix(in lab, var(--brand) 7%, var(--surface)), var(--surface));
+  border:1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding:24px 22px;
+  box-shadow: var(--shadow);
+}
+.ms-welcome__title{ font-size: clamp(20px, 2.6vw, 28px); font-weight: 800; letter-spacing: .02em; }
+.ms-welcome__sub{ color:var(--muted); font-size:14px; margin-top:4px }
+
+/* 2カラム基調グリッド */
+.ms-grid{ display:grid; gap:20px; grid-template-columns: 1.1fr 1fr; margin-top: 24px }
+@media (max-width: 960px){ .ms-grid{ grid-template-columns: 1fr } }
+
+/* カード */
+.ms-card{
+  background: var(--surface);
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.ms-card__head{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.ms-card__title{ font-weight:700; letter-spacing:.02em }
+.ms-card__body{ padding:16px }
+
+/* お知らせ（iframe想定） */
+.ms-news iframe{
+  width:100%; height:220px; border:0; border-radius:10px;
+  background: color-mix(in lab, var(--surface) 70%, var(--bg));
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+@media (max-width: 480px){ .ms-news iframe{ height:180px } }
+
+/* メニュー */
+.ms-menu{ display:grid; gap:14px; grid-template-columns: repeat(2, minmax(0,1fr)) }
+@media (max-width: 640px){ .ms-menu{ grid-template-columns: 1fr } }
+.ms-menu a{
+  position:relative; display:flex; align-items:center; justify-content:center; gap:10px;
+  padding:18px 14px; border:1px solid var(--border); border-radius:14px;
+  background: linear-gradient(180deg, color-mix(in lab, var(--surface) 90%, var(--brand) 5%), var(--surface));
+  text-decoration:none; color:var(--text); font-weight:700; box-shadow: var(--shadow);
+  transition: transform .12s ease, box-shadow .12s ease, background .2s ease; cursor:pointer;
+}
+.ms-menu a:hover{ transform: translateY(-2px); box-shadow: 0 10px 26px color-mix(in lab, var(--brand) 45%, transparent) }
+.ms-menu a:active{ transform: translateY(0); box-shadow: var(--shadow) }
+.ms-menu__label{ display:flex; flex-direction:column; align-items:center; line-height:1.2 }
+.ms-menu__label .jp{ font-size:16px }
+.ms-menu__label .en{ font-size:12px; color:var(--muted); transition:opacity .2s ease }
+.ms-menu a:hover .en{ opacity:.85 }
+.ms-chip{
+  position:absolute; top:10px; left:10px; padding:3px 8px; border-radius:999px; font-size:11px; letter-spacing:.02em;
+  background: color-mix(in lab, var(--brand) 18%, var(--surface));
+  color: color-mix(in lab, var(--text) 90%, var(--brand));
+  border:1px solid var(--border);
+}
+
+/* 問い合わせフォーム等 */
+.ms-ask .ms-card__body{ display:flex; flex-direction:column; gap:12px }
+.ms-ask label{ font-weight:700; display:block; margin-bottom:6px }
+.ms-ask textarea{
+  width:100%; min-height:140px; resize:vertical;
+  border:1px solid var(--border); border-radius:12px;
+  background: color-mix(in lab, var(--surface) 92%, var(--bg));
+  color:var(--text);
+  padding:12px 14px; line-height:1.6; font-size:14px;
+  outline:none; transition: box-shadow .15s ease, border-color .15s ease, background .2s ease;
+}
+.ms-ask textarea:focus{
+  border-color: color-mix(in lab, var(--brand) 30%, var(--border));
+  box-shadow: 0 0 0 4px var(--ring);
+}
+.ms-ask .ms-actions{ display:flex; align-items:center; gap:10px; justify-content:flex-end; margin-top:6px }
+
+/* ボタン */
+.btn{
+  appearance:none; border:1px solid var(--border); padding:10px 16px; border-radius:12px; cursor:pointer;
+  background: var(--surface); color:var(--text); font-weight:700;
+  transition: transform .12s ease, box-shadow .12s ease, background .2s ease, border-color .2s ease;
+}
+.btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow) }
+.btn:active{ transform: translateY(0) }
+.btn--primary{
+  background: linear-gradient(180deg, color-mix(in lab, var(--brand) 40%, var(--surface)), var(--brand));
+  color:#fff;
+  border-color: color-mix(in lab, var(--brand) 60%, var(--border));
+}
+.btn--primary:hover{ box-shadow: 0 10px 26px color-mix(in lab, var(--brand) 40%, transparent) }
+.btn--ghost{ background: transparent }
+
+/* モーダル */
+dialog{ border:none; padding:0; border-radius:14px; overflow:hidden; background: var(--surface); color:var(--text);
+  box-shadow: 0 24px 60px rgba(2,6,23,0.35); width:min(420px, 92vw) }
+dialog::backdrop{ background: rgba(2,6,23,0.55); backdrop-filter: blur(4px) }
+.ms-modal__head{ padding:14px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px }
+.ms-modal__title{ font-weight:700 }
+.ms-modal__body{ padding:18px 16px; color:var(--muted) }
+.ms-modal__foot{ padding:12px 16px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end }
+
+/* 後方互換&小ユーティリティ */
+#open.btn, .submit.btn{ min-width:120px }
+iframe{ background: transparent }
+.visually-hidden{
+  position:absolute !important; clip:rect(1px,1px,1px,1px);
+  clip-path: inset(50%); width:1px; height:1px; overflow:hidden; white-space:nowrap;
+}
+.mt-8{ margin-top:8px } .mt-12{ margin-top:12px } .mt-16{ margin-top:16px }

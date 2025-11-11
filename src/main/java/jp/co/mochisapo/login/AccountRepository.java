@@ -24,17 +24,17 @@ import jp.co.mochisapo.login.AccountEntity.Role;
 public final class AccountRepository {
 	
 	private static final String SQL_GET_STUDENT_BY_LOGIN_ID  = """
-			SELECT id, login_id, class_code, name, birthday, password AS password_hash
+			SELECT id, login_id, class, name, birthday, password AS password_hash 
 			FROM student WHERE login_id = ? LIMIT 1
 			""";
 	
 	private static final String SQL_GET_STAFF_BY_LOGIN_ID  = """
-			SELECT id, login_id, class_code, name, job_category_code, birthday, password AS password_hash
+			SELECT id, login_id, class, name, job_category, birthday, password AS password_hash 
 			FROM staff WHERE login_id = ? LIMIT 1 
 			""";
 	
 	private static final String SQL_GET_ADMIN_BY_LOGIN_ID  = """ 
-			SELECT id, login_id, name, password AS password_hash
+			SELECT id, login_id, name, password AS password_hash 
 			FROM administrator WHERE login_id = ? LIMIT 1 
 			""";
 	// loginIdから候補を取って返却する（パスワード照合はサービス層で）
@@ -72,7 +72,6 @@ public final class AccountRepository {
 	
 	public Optional<Candidate> findAdministratorByLoginId(String loginId) 
 			throws SQLException, NamingException {
-		
 		try (Connection conn = DbUtil.getConnection();
 				PreparedStatement ps = conn.prepareStatement(SQL_GET_ADMIN_BY_LOGIN_ID)) {
 			
@@ -104,7 +103,7 @@ public final class AccountRepository {
 		e.setRole(Role.STUDENT);
 		e.setId(rs.getInt("id"));
 		e.setLoginId(rs.getString("login_id"));
-		e.setClassCode(rs.getString("class_code"));
+		e.setClassCode(rs.getString("class"));
 		e.setName(rs.getString("name"));
 		Date bd = rs.getDate("birthday");
 		e.setBirthday(bd != null ? bd.toLocalDate() : null);
@@ -115,7 +114,7 @@ public final class AccountRepository {
 	private static Candidate mapStaffCandidate(ResultSet rs) throws SQLException {
 		Candidate c = mapStudentCandidate(rs);
 		c.entity().setRole(Role.STAFF);
-		c.entity().setJobCategoryCode(rs.getString("job_category_code"));
+		c.entity().setJobCategoryCode(rs.getString("job_category"));
 		return new Candidate(c.entity(), rs.getString("password_hash"));
 	}
 	
