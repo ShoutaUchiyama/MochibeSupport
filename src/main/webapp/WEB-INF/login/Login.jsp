@@ -16,7 +16,7 @@
         <div class="login-title">ログイン</div>
 
         <form class="login-form" action="${pageContext.request.contextPath}/LoginServlet" method="post">
-            <input type="text" name="loginId" placeholder="ユーザーID" required>
+            <input type="text" name="emailAddress" placeholder="メールアドレス" required>
             <input type="password" name="password" placeholder="パスワード" required>
             <button type="submit" class="login-button">ログイン</button>
         </form>

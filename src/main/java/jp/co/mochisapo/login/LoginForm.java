@@ -6,24 +6,24 @@ package jp.co.mochisapo.login;
  *
  */
 public class LoginForm {
-	/** ログインID */
-	private String loginId;
+	/** メールアドレス */
+	private String emailAddress;
 	/** パスワード */
 	private String password;
 	
 	/**
-	 * ログインIDを取得
-	 * @return loginId
+	 * メールアドレスを取得
+	 * @return emailAddress
 	 */
-	public String getLoginId() {
-		return loginId;
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 	/**
-	 * ログインIDを設定
-	 * @param loginId 設定するログインID
+	 * メールアドレスを設定
+	 * @param emailAddress 設定するメールアドレス
 	 */
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 	/**
 	 * パスワードを取得

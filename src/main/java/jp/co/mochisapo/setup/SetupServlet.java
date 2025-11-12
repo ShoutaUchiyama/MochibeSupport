@@ -39,7 +39,7 @@ public class SetupServlet extends HttpServlet {
         }
 
         req.setCharacterEncoding("UTF-8");
-        String loginId = req.getParameter("loginId");
+        String emailAddress = req.getParameter("emailAddress");
         String password = req.getParameter("password");
         String name     = req.getParameter("name");
         String csrf     = req.getParameter("csrfToken");
@@ -49,7 +49,7 @@ public class SetupServlet extends HttpServlet {
             return;
         }
 
-        if (isBlank(loginId) || isBlank(password) || isBlank(name)) {
+        if (isBlank(emailAddress) || isBlank(password) || isBlank(name)) {
             req.setAttribute("error", "すべて入力してください。");
             req.setAttribute("csrfToken", setupService.issueCsrfToken(req.getSession()));
             req.getRequestDispatcher("/WEB-INF/setup/Setup.jsp").forward(req, resp);
@@ -57,7 +57,7 @@ public class SetupServlet extends HttpServlet {
         }
 
         try {
-            setupService.createInitialAdmin(loginId.trim(), password, name.trim());
+            setupService.createInitialAdmin(emailAddress.trim(), password, name.trim());
             req.getSession().setAttribute("setupMessage", "初期管理者の登録が完了しました。ログインしてください。");
             resp.sendRedirect(req.getContextPath() + "/LoginHomeServlet");
         } catch (Exception e) {

@@ -6,8 +6,8 @@ package jp.co.mochisapo.login;
  *
  */
 public class AccountDto {
-	/** 認証用：ログインID（必須）*/
-	private String loginId;
+	/** 認証用：メールアドレス（必須）*/
+	private String emailAddress;
 	/** 認証用；ハッシュ済パスワード */
 	private String passwordHash;
 	/** アカウントID */
@@ -16,18 +16,18 @@ public class AccountDto {
 	private String keyword;
 	
 	/**
-	 * ログインIDを取得
-	 * @return ログインIDを取得
+	 * メールアドレスを取得
+	 * @return メールアドレスを取得
 	 */
-	public String getLoginId() {
-		return loginId;
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 	/**
-	 * ログインIDを設定
-	 * @return loginId 設定するログインID
+	 * メールアドレスを設定
+	 * @return mailAddress 設定するメールアドレス
 	 */
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 	/**
 	 * ハッシュ済パスワードを取得

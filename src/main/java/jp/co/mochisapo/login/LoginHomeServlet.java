@@ -11,25 +11,30 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/LoginHomeServlet")
 public class LoginHomeServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/login/Login.jsp");
-		dispatcher.forward(request, response);
-	}
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-		String msg = (String) request.getSession().getAttribute("setupMessage");
-		if (msg != null) {
-		    request.setAttribute("message", msg);
-		    request.getSession().removeAttribute("setupMessage");
-		}
+    private static final long serialVersionUID = 1L;
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/login/Login.jsp");
-		dispatcher.forward(request, response);
-		
-		doPost(request, response);
-	}
+    private static final String LOGIN_JSP = "/WEB-INF/login/Login.jsp";
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        forwardToLogin(request, response);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String msg = (String) request.getSession().getAttribute("setupMessage");
+        if (msg != null) {
+            request.setAttribute("message", msg);
+            request.getSession().removeAttribute("setupMessage");
+        }
+        forwardToLogin(request, response);
+    }
+
+    private void forwardToLogin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher(LOGIN_JSP);
+        dispatcher.forward(request, response);
+    }
 }

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jp.co.mochisapo.common.JobCategory;
 import jp.co.mochisapo.session.SessionKeys;
 import jp.co.mochisapo.session.SessionUser;
 
@@ -29,46 +30,33 @@ public class HomeServlet extends HttpServlet {
 	    
 
 	    // --- セッションから値を取得（SessionUserがある場合/ない場合の両方を吸収） ---
-	    String loginId = null;
-	    String jobCode = null; // "TT" なら教師、それ以外はキャリコン扱い
-
 	    Object sessionVal = session.getAttribute(SessionKeys.LOGIN_USER);
 	    
 	    SessionUser user = (SessionUser) sessionVal;
 	    
-	    loginId = safe(user::getLoginId);
-	    jobCode = safe(user::getJobCategoryCode);
+	    String mailAddress = safe(user::getEmailAddress);
+	    String jobCode = safe(user::getJobCategoryCode);
 	    
-	    if (loginId == null || loginId.isEmpty()) {
+	    if (mailAddress == null || mailAddress.isEmpty()) {
 	        response.sendRedirect(request.getContextPath() + "/login");
 	        return;
 	    }
 	    
-	    // --- ID桁数でホーム画面を振り分け ---
-	    String destination;
-	    destination = "/WEB-INF/home/StudentHome.jsp";
-	    
-	    int len = loginId.length();
+	    // --- 職業区分でホーム画面を振り分け ---
+	    String destination = null;
+	    JobCategory jc = JobCategory.fromCode(jobCode);
+        switch (jc) {
+        case STUDENT -> destination = "/WEB-INF/home/StudentHome.jsp";
+        case TEACHER -> destination = "/WEB-INF/home/TeacherHome.jsp";
+        case CAREER -> destination = "/WEB-INF/home/CareerConsultantHome.jsp";
+        case ADMIN -> destination = "/WEB-INF/home/AdministratorHome.jsp";
+        }
 
-	    if (len == 4) {
-	        destination = "/WEB-INF/home/StudentHome.jsp";
-
-	    } else if (len == 6) {
-	        // 6桁はSTAFF想定：jobCode が "TT" なら教師、それ以外はキャリコン
-	        if ("TT".equals(jobCode)) {
-	            destination = "/WEB-INF/home/TeacherHome.jsp";
-	        } else {
-	            destination = "/WEB-INF/home/CareerConsultantHome.jsp";
-	        }
-
-	    } else if (len == 8) {
-	        destination = "/WEB-INF/home/AdministratorHome.jsp";
-
-	    } else {
-	        // 想定外のIDフォーマットはログインへ戻す
-	        response.sendRedirect(request.getContextPath() + "/login");
-	        return;
-	    }
+	    // 想定外のIDフォーマットはログインへ戻す
+        if (destination == null || destination.isEmpty()) {
+        	response.sendRedirect(request.getContextPath() + "/login");
+        	return;
+        }
 
 	    RequestDispatcher dispatcher = request.getRequestDispatcher(destination);
 	    dispatcher.forward(request, response);

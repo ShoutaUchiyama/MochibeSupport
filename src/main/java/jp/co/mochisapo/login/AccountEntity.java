@@ -10,14 +10,10 @@ import java.util.StringJoiner;
  */
 public class AccountEntity {
 	
-	public enum Role { STUDENT, STAFF, ADMIN }
-	
-	/** role */
-	private Role role;
 	/** id */
 	private int id;
-	/** ログインに使用するID */
-	private String loginId;
+	/** ログインに使用するメールアドレス */
+	private String emailAddress;
 	/** クラス（組織や学級など）を表すコード値 */
 	private String classCode;
 	/** 氏名 */
@@ -27,20 +23,6 @@ public class AccountEntity {
 	/** 生年月日 */
 	private LocalDate birthday;
 	
-	/**
-	 * Roleを取得
-	 * @return role
-	 */
-	public Role getRole() {
-		return role;
-	}
-	/**
-	 * Roleを設定
-	 * @return role 設定するrole
-	 */
-	public void setRole(Role role) {
-		this.role = role;
-	}
 	/** 
 	 * IDを取得
 	 * @return ID
@@ -56,18 +38,18 @@ public class AccountEntity {
 		this.id = id;
 	}
 	/**
-	 * ログインIDを取得
-	 * @return ログインID
+	 * メールアドレスを取得
+	 * @return メールアドレス
 	 */
-	public String getLoginId() {
-		return loginId;
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 	/**
-	 * ログインIDを設定
-	 * @param loginId 設定するログインID
+	 * メールアドレスを設定
+	 * @param loginId 設定するメールアドレス
 	 */
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 	/**
 	 * クラスコードを取得
@@ -128,14 +110,13 @@ public class AccountEntity {
 	@Override
 	public String toString() {
 		// 機微情報は含めない。loginIdは一部マスク
-		String maskedLogin = loginId == null ? null :
-			(loginId.length() <= 3 ? "***" : loginId.substring(0, 3) + "***");
+		String maskedEmailAddress = emailAddress == null ? null :
+			(emailAddress.length() <= 3 ? "***" : emailAddress.substring(0, 3) + "***");
 		
 		return new StringJoiner(", ", getClass().getName() + "{", "}")
 				.add("id=" + id)
-				.add("loginId=" + maskedLogin)
+				.add("emailAddress=" + maskedEmailAddress)
 				.add("name=" + name)
-				.add("role=" + role)
 				.toString();
 	}
 }

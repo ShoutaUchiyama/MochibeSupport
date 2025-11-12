@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jp.co.mochisapo.login.AccountEntity.Role;
+import jp.co.mochisapo.common.JobCategory;
 import jp.co.mochisapo.session.SessionKeys;
 import jp.co.mochisapo.session.SessionUser;
 import jp.co.mochisapo.user.profile.web.form.ProfileForm;
@@ -32,19 +32,19 @@ public class LoginServlet extends HttpServlet {
             request.setCharacterEncoding("UTF-8");
         }
 
-        String loginId = trimToNull(request.getParameter("loginId"));
+        String emailAddress = trimToNull(request.getParameter("emailAddress"));
         String pw = request.getParameter("password");
         char[] password = (pw != null) ? pw.toCharArray() : null;
 
         try {
-            if (loginId == null || password == null || password.length == 0) {
-                toLoginPage(request, response, "ログインIDまたはパスワードを入力してください。");
+            if (emailAddress == null || password == null || password.length == 0) {
+                toLoginPage(request, response, "メールアドレスまたはパスワードを入力してください。");
                 return;
             }
 
-            Optional<AccountEntity> auth = accountService.authenticateAutoDetect(loginId, password);
+            Optional<AccountEntity> auth = accountService.authenticateAutoDetect(emailAddress, password);
             if (auth.isEmpty()) {
-                toLoginPage(request, response, "UserID、または、Passwordが違います。");
+                toLoginPage(request, response, "メールアドレス、または、パスワードが違います。");
                 return;
             }
             AccountEntity e = auth.get();
@@ -58,19 +58,21 @@ public class LoginServlet extends HttpServlet {
 
             // セッションへは軽量DTOを格納
             SessionUser su = new SessionUser(
-                    e.getId(), e.getLoginId(), e.getName(), e.getRole(),
+                    e.getId(), e.getEmailAddress(), e.getName(),
                     e.getClassCode(), e.getJobCategoryCode()
             );
             request.getSession().setAttribute(SessionKeys.LOGIN_USER, su);
+            
+            JobCategory jc = JobCategory.fromCode(e.getJobCategoryCode());
 
             // 管理者へのワーニング（元の挙動を踏襲）
-            if (e.getRole() == Role.ADMIN) {
+            if (jc == JobCategory.ADMIN) {
                 request.getSession().setAttribute("MessageForAdmin", "ユーザー情報よりパスワードの変更をお願いします");
             }
 
             // 初回導線（誕生日未登録）…管理者はホーム、学生/職員は登録画面へ
             if (e.getBirthday() == null) {
-                if (e.getRole() == Role.ADMIN) {
+                if (jc == JobCategory.ADMIN) {
                     forward(request, response, "/WEB-INF/home/AdministratorHome.jsp");
                 } else {
                     ProfileForm userForm = new ProfileForm();
@@ -84,18 +86,10 @@ public class LoginServlet extends HttpServlet {
             }
 
             // 通常遷移
-            switch (e.getRole()) {
+            switch (jc) {
                 case STUDENT -> forward(request, response, "/WEB-INF/home/StudentHome.jsp");
-                case STAFF -> {
-                    String jc = e.getJobCategoryCode();
-                    if ("TT".equals(jc)) {
-                        forward(request, response, "/WEB-INF/home/TeacherHome.jsp");
-                    } else if ("CC".equals(jc)) {
-                        forward(request, response, "/WEB-INF/home/CareerConsultantHome.jsp");
-                    } else {
-                        forward(request, response, "/WEB-INF/home/StaffHome.jsp");
-                    }
-                }
+                case TEACHER -> forward(request, response, "/WEB-INF/home/TeacherHome.jsp");
+                case CAREER -> forward(request, response, "/WEB-INF/home/CareerConsultantHome.jsp");
                 case ADMIN -> forward(request, response, "/WEB-INF/home/AdministratorHome.jsp");
             }
 

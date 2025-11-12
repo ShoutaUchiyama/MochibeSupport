@@ -10,7 +10,6 @@ import java.util.Optional;
 import javax.naming.NamingException;
 
 import jp.co.mochisapo.common.DbUtil;
-import jp.co.mochisapo.login.AccountEntity.Role;
 
 /**
  * ログインIDとパスワードに一致するユーザを1件取得します。
@@ -23,64 +22,24 @@ import jp.co.mochisapo.login.AccountEntity.Role;
 
 public final class AccountRepository {
 	
-	private static final String SQL_GET_STUDENT_BY_LOGIN_ID  = """
-			SELECT id, login_id, class, name, birthday, password AS password_hash 
-			FROM student WHERE login_id = ? LIMIT 1
+	private static final String SQL_GET_USER  = """
+			SELECT id, email_address, class_code, name, birthday, job_category_code, password AS password_hash 
+			FROM users WHERE email_address = ? LIMIT 1
 			""";
 	
-	private static final String SQL_GET_STAFF_BY_LOGIN_ID  = """
-			SELECT id, login_id, class, name, job_category, birthday, password AS password_hash 
-			FROM staff WHERE login_id = ? LIMIT 1 
-			""";
-	
-	private static final String SQL_GET_ADMIN_BY_LOGIN_ID  = """ 
-			SELECT id, login_id, name, password AS password_hash 
-			FROM administrator WHERE login_id = ? LIMIT 1 
-			""";
-	// loginIdから候補を取って返却する（パスワード照合はサービス層で）
-	public Optional<Candidate> findStudentByLoginId(String loginId) 
+	// emailAddressから候補を取って返却する（パスワード照合はサービス層で）
+	public Optional<Candidate> findUser(String emailAddress) 
 			throws SQLException, NamingException {
 		
 		try (Connection conn = DbUtil.getConnection();
-				PreparedStatement ps = conn.prepareStatement(SQL_GET_STUDENT_BY_LOGIN_ID)) {
+				PreparedStatement ps = conn.prepareStatement(SQL_GET_USER)) {
 			
-			ps.setString(1, loginId);
+			ps.setString(1, emailAddress);
 
 			try (ResultSet rs = ps.executeQuery()) {
 				if (!rs.next()) return Optional.empty();
-				return Optional.of(mapStudentCandidate(rs));
+				return Optional.of(mapUserCandidate(rs));
 			}	
-		}
-	}
-	
-	public Optional<Candidate> findStaffByLoginId(String loginId) 
-			throws SQLException, NamingException {
-		
-		
-		try (Connection conn = DbUtil.getConnection();
-				PreparedStatement ps = conn.prepareStatement(SQL_GET_STAFF_BY_LOGIN_ID)) {
-			
-			ps.setString(1, loginId);
-			
-			try (ResultSet rs = ps.executeQuery()) {
-				if (!rs.next()) return Optional.empty();
-				
-				return Optional.of(mapStaffCandidate(rs));
-			}
-		}
-	}
-	
-	public Optional<Candidate> findAdministratorByLoginId(String loginId) 
-			throws SQLException, NamingException {
-		try (Connection conn = DbUtil.getConnection();
-				PreparedStatement ps = conn.prepareStatement(SQL_GET_ADMIN_BY_LOGIN_ID)) {
-			
-			ps.setString(1, loginId);
-			
-			try (ResultSet rs = ps.executeQuery()) {
-				if (!rs.next()) return Optional.empty();
-				return Optional.of(mapAdminCandidate(rs));
-			}
 		}
 	}
 	
@@ -96,34 +55,17 @@ public final class AccountRepository {
 		public String passwordHash() { return passwordHash; }
 	}
 	
-	
 	// --- mappers ---
-	private static Candidate mapStudentCandidate(ResultSet rs) throws SQLException {
+	private static Candidate mapUserCandidate(ResultSet rs) throws SQLException {
 		AccountEntity e = new AccountEntity();
-		e.setRole(Role.STUDENT);
 		e.setId(rs.getInt("id"));
-		e.setLoginId(rs.getString("login_id"));
-		e.setClassCode(rs.getString("class"));
+		e.setEmailAddress(rs.getString("email_address"));
+		e.setClassCode(rs.getString("class_code"));
 		e.setName(rs.getString("name"));
 		Date bd = rs.getDate("birthday");
+		e.setJobCategoryCode(rs.getString("job_category_code"));
 		e.setBirthday(bd != null ? bd.toLocalDate() : null);
 		return new Candidate(e, rs.getString("password_hash"));
 
-	}
-	
-	private static Candidate mapStaffCandidate(ResultSet rs) throws SQLException {
-		Candidate c = mapStudentCandidate(rs);
-		c.entity().setRole(Role.STAFF);
-		c.entity().setJobCategoryCode(rs.getString("job_category"));
-		return new Candidate(c.entity(), rs.getString("password_hash"));
-	}
-	
-	private static Candidate mapAdminCandidate(ResultSet rs) throws SQLException {
-		AccountEntity e = new AccountEntity();
-		e.setRole(Role.ADMIN);
-		e.setId(rs.getInt("id"));
-		e.setLoginId(rs.getString("login_id"));
-		e.setName(rs.getString("name"));
-		return new Candidate(e, rs.getString("password_hash"));
 	}
 }

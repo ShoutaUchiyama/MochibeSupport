@@ -18,8 +18,8 @@
     <form action="${pageContext.request.contextPath}/setup" method="post" autocomplete="off">
       <input type="hidden" name="csrfToken" value="${csrfToken}">
 
-      <label for="loginId">ログインID</label>
-      <input type="text" id="loginId" name="loginId" required>
+      <label for="emailAddress">メールアドレス</label>
+      <input type="text" id="emailAddress" name="emailAddress" required>
 
       <label for="password">パスワード</label>
       <input type="password" id="password" name="password" required>

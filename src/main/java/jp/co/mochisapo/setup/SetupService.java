@@ -11,6 +11,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import jp.co.mochisapo.common.JobCategory;
 import jp.co.mochisapo.common.PasswordHasher; // 添付のクラスのパッケージに合わせて
 
 public class SetupService {
@@ -28,7 +29,7 @@ public class SetupService {
 
     /** administrator に1件でもレコードがあるか */
     public boolean hasAnyAdmin() {
-        final String sql = "SELECT COUNT(*) FROM administrator";
+        final String sql = "SELECT COUNT(*) FROM users";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -40,15 +41,16 @@ public class SetupService {
     }
 
     /** 初期管理者の作成（passwordにハッシュを保存） */
-    public void createInitialAdmin(String loginId, String rawPassword, String name) throws SQLException {
+    public void createInitialAdmin(String emailAddress, String rawPassword, String name) throws SQLException {
         final String hash = hashWithPasswordHasher(rawPassword);
 
-        final String sql = "INSERT INTO administrator (login_id, password, name) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO users (email_address, password, name, job_category_code) VALUES (?, ?, ?, ?)";
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, loginId);
+            ps.setString(1, emailAddress);
             ps.setString(2, hash);
             ps.setString(3, name);
+            ps.setString(4, JobCategory.ADMIN.getJobCode());
             ps.executeUpdate();
         }
     }
